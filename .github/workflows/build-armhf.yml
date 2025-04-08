@@ -26,7 +26,6 @@ jobs:
 
       - name: Install Linux build dependencies
         run: |
-          sudo dpkg --add-architecture armhf
           sudo apt update
           sudo apt install -y \
             pkg-config \
@@ -39,16 +38,11 @@ jobs:
             build-essential \
             curl \
             wget \
-            file \
-            libglib2.0-dev:armhf \
-            libc6-dev-armhf-cross
+            file
 
       - name: Set up cross-compilation environment variables
         run: |
           echo "PKG_CONFIG_ALLOW_CROSS=1" >> $GITHUB_ENV
-          echo "PKG_CONFIG_SYSROOT_DIR=/usr/arm-linux-gnueabihf" >> $GITHUB_ENV
-          echo "PKG_CONFIG_LIBDIR=/usr/lib/arm-linux-gnueabihf/pkgconfig:/usr/share/pkgconfig" >> $GITHUB_ENV
-          echo "PKG_CONFIG_PATH=/usr/lib/arm-linux-gnueabihf/pkgconfig" >> $GITHUB_ENV
 
       - name: Install Tauri CLI
         run: cargo install tauri-cli
