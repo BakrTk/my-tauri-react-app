@@ -8,7 +8,7 @@ on:
 
 jobs:
   build-tauri-armhf:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04  # ✅ التعديل هنا
 
     steps:
       - name: Checkout Repository
