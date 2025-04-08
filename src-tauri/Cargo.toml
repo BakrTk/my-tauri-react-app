@@ -1,12 +1,12 @@
 [package]
-name = "test-app"
+name = "my-tauri-app"
 version = "0.1.0"
-description = "A Tauri App"
-authors = ["you"]
 edition = "2021"
+description = "A minimal Tauri app for ARM"
+authors = ["you"]
 
 [lib]
-name = "test_app_lib"
+name = "my_tauri_app_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]

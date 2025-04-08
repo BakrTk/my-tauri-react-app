@@ -1,14 +1,12 @@
-name: "Build ARMv7 for Raspberry Pi"
+name: "Build Tauri App for Raspberry Pi ARMv7"
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   workflow_dispatch:
 
 jobs:
   build:
-    name: Build Tauri App for ARMv7
     runs-on: ubuntu-latest
     container:
       image: messense/rust-musl-cross:armv7-musleabihf
@@ -17,33 +15,28 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install pkg-config in container
-        run: apt-get update && apt-get install -y pkg-config
-
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Install dependencies and build frontend
+      - name: Install frontend deps and build
         run: |
           npm install
           npm run build
 
-      - name: Build Tauri App for ARMv7
+      - name: Build Tauri app for ARMv7
         working-directory: src-tauri
         env:
           TAURI_ARCH: armv7
           TAURI_PLATFORM: linux
           TAURI_FAMILY: unix
           CARGO_TARGET_ARMV7_UNKNOWN_LINUX_MUSLEABIHF_LINKER: armv7-unknown-linux-musleabihf-gcc
-          JAVASCRIPTCOREGTK_4.1_NO_PKG_CONFIG: "1"
-          GLIB_2.0_NO_PKG_CONFIG: "1"
         run: |
           rustup target add armv7-unknown-linux-musleabihf
-          cargo build --release --target armv7-unknown-linux-musleabihf
+          cargo build --release --target=armv7-unknown-linux-musleabihf
 
-      - name: Upload binary artifact
+      - name: Upload binary
         uses: actions/upload-artifact@v4
         with:
           name: tauri-armv7-binary
