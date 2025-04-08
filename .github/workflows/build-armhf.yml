@@ -11,12 +11,14 @@ jobs:
     name: Build Tauri App for ARMv7
     runs-on: ubuntu-latest
     container:
-      # نستخدم صورة جاهزة تدعم cross-compilation إلى armv7 مع musl
       image: messense/rust-musl-cross:armv7-musleabihf
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Install pkg-config in container
+        run: apk add pkgconfig
 
       - name: Install Node.js
         uses: actions/setup-node@v4
@@ -35,7 +37,6 @@ jobs:
           TAURI_PLATFORM: linux
           TAURI_FAMILY: unix
           CARGO_TARGET_ARMV7_UNKNOWN_LINUX_MUSLEABIHF_LINKER: armv7-unknown-linux-musleabihf-gcc
-          # هذا المتغير يخبر build scripts بعدم استخدام pkg-config للـ javascriptcoregtk-4.1
           JAVASCRIPTCOREGTK_4.1_NO_PKG_CONFIG: "1"
         run: |
           rustup target add armv7-unknown-linux-musleabihf
