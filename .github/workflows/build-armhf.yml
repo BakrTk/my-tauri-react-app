@@ -1,4 +1,4 @@
-name: "Build ARMv7 for Raspberry Pi (via Cross Docker Image)"
+name: "Build ARMv7 for Raspberry Pi"
 
 on:
   push:
@@ -38,6 +38,7 @@ jobs:
           TAURI_FAMILY: unix
           CARGO_TARGET_ARMV7_UNKNOWN_LINUX_MUSLEABIHF_LINKER: armv7-unknown-linux-musleabihf-gcc
           JAVASCRIPTCOREGTK_4.1_NO_PKG_CONFIG: "1"
+          GLIB_2.0_NO_PKG_CONFIG: "1"
         run: |
           rustup target add armv7-unknown-linux-musleabihf
           cargo build --release --target armv7-unknown-linux-musleabihf
