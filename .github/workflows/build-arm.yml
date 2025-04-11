@@ -1,0 +1,43 @@
+name: Build Tauri App for Raspberry Pi ARMv7
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-arm:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🐳 Set up Docker
+        uses: docker/setup-buildx-action@v2
+
+      - name: 🚀 Build with xc-tauri-rasp (ARMv7 - Raspberry Pi)
+        run: |
+          sudo apt update && sudo apt install -y git curl
+
+          # Clone the cross-compilation tool
+          git clone https://github.com/Shiritai/xc-tauri-rasp.git
+
+          # Run cross compilation for ARMv7 (armhf)
+          cd xc-tauri-rasp
+          chmod +x xcompile.sh
+
+          # تعديل حسب اسم مشروعك والمجلد
+          ./xcompile.sh \
+            -e bookworm \
+            -n my-tauri-react-app \
+            -p ../ \
+            -a armhf \
+            -t ../output
+
+      - name: 📦 Upload artifact (ARM binary)
+        uses: actions/upload-artifact@v4
+        with:
+          name: tauri-armv7-build
+          path: ./output
