@@ -24,20 +24,19 @@ jobs:
           # تحميل أداة xc-tauri-rasp
           git clone https://github.com/Shiritai/xc-tauri-rasp.git
 
-          # منح صلاحية التنفيذ والتجميع
+          # تنفيذ سكربت التجميع باستخدام المسار المطلق
           cd xc-tauri-rasp
           chmod +x xcompile.sh
 
-          # تنفيذ سكربت التجميع
           ./xcompile.sh \
             -e bookworm \
-            -n my-tauri-react-app \
-            -p ../ \
+            -n my-tauri-app \
+            -p $GITHUB_WORKSPACE \
             -a armhf \
-            -t ../output
+            -t $GITHUB_WORKSPACE/output
 
       - name: 📦 رفع ملف ARM الناتج
         uses: actions/upload-artifact@v4
         with:
           name: tauri-armv7-build
-          path: ./output
+          path: output
