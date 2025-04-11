@@ -17,18 +17,18 @@ jobs:
       - name: 🐳 Set up Docker
         uses: docker/setup-buildx-action@v2
 
-      - name: 🚀 Build with xc-tauri-rasp (ARMv7 - Raspberry Pi)
+      - name: 🚀 Build with xc-tauri-rasp (ARMv7 - Pi Zero 2 W)
         run: |
           sudo apt update && sudo apt install -y git curl
 
-          # Clone the cross-compilation tool
+          # تحميل أداة xc-tauri-rasp
           git clone https://github.com/Shiritai/xc-tauri-rasp.git
 
-          # Run cross compilation for ARMv7 (armhf)
+          # منح صلاحية التنفيذ والتجميع
           cd xc-tauri-rasp
           chmod +x xcompile.sh
 
-          # تعديل حسب اسم مشروعك والمجلد
+          # تنفيذ سكربت التجميع
           ./xcompile.sh \
             -e bookworm \
             -n my-tauri-react-app \
@@ -36,7 +36,7 @@ jobs:
             -a armhf \
             -t ../output
 
-      - name: 📦 Upload artifact (ARM binary)
+      - name: 📦 رفع ملف ARM الناتج
         uses: actions/upload-artifact@v4
         with:
           name: tauri-armv7-build
