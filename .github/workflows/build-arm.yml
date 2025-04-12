@@ -21,10 +21,7 @@ jobs:
         run: |
           sudo apt update && sudo apt install -y git curl
 
-          # تحميل أداة xc-tauri-rasp
           git clone https://github.com/Shiritai/xc-tauri-rasp.git
-
-          # تنفيذ سكربت التجميع باستخدام المسار المطلق
           cd xc-tauri-rasp
           chmod +x xcompile.sh
 
@@ -33,9 +30,10 @@ jobs:
             -n my-tauri-app \
             -p $GITHUB_WORKSPACE \
             -a armhf \
-            -t $GITHUB_WORKSPACE/output
+            -t $GITHUB_WORKSPACE/output \
+            --before "npm install && npm install -g vite"
 
-      - name: 📦 رفع ملف ARM الناتج
+      - name: 📦 Upload output
         uses: actions/upload-artifact@v4
         with:
           name: tauri-armv7-build
