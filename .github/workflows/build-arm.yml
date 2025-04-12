@@ -21,10 +21,12 @@ jobs:
         run: |
           sudo apt update && sudo apt install -y git curl
 
+          # تحميل السكربت الرسمي
           git clone https://github.com/Shiritai/xc-tauri-rasp.git
           cd xc-tauri-rasp
           chmod +x xcompile.sh
 
+          # تشغيل البناء داخل Docker + تثبيت vite
           ./xcompile.sh \
             -e bookworm \
             -n my-tauri-app \
@@ -33,8 +35,22 @@ jobs:
             -t $GITHUB_WORKSPACE/output \
             --before "npm install && npm install -g vite"
 
-      - name: 📦 Upload output
+      - name: 🧾 List output contents
+        run: |
+          echo "📂 Checking contents of output..."
+          ls -lh $GITHUB_WORKSPACE/output || echo "⚠️ output folder not found"
+
+      - name: ❗ Fail if no .deb found
+        run: |
+          if ls $GITHUB_WORKSPACE/output/*.deb > /dev/null 2>&1; then
+            echo "✅ .deb file is ready!"
+          else
+            echo "❌ ERROR: No .deb file found in output!"
+            exit 1
+          fi
+
+      - name: 📦 Upload .deb file
         uses: actions/upload-artifact@v4
         with:
           name: tauri-armv7-build
-          path: output
+          path: output/*.deb
