@@ -2,7 +2,8 @@ name: Build Tauri App for Raspberry Pi ARMv7
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
@@ -16,14 +17,14 @@ jobs:
       - name: 🐳 Set up Docker
         uses: docker/setup-buildx-action@v2
 
-      - name: 🛠️ Prepare build script and fix pkg-config
+      - name: 🛠️ Prepare build script and patch Dockerfile
         run: |
           sudo apt update && sudo apt install -y git curl
           git clone https://github.com/Shiritai/xc-tauri-rasp.git
           cd xc-tauri-rasp
 
-          # ✅ إصلاح Dockerfile لإضافة pkg-config
-          sed -i '/RUN apt-get update/i RUN apt-get update && apt-get install -y pkg-config' Dockerfile
+          # ✅ إصلاح Dockerfile: تثبيت pkg-config + nodejs + npm
+          sed -i '/apt-get update/a RUN apt-get install -y pkg-config nodejs npm' Dockerfile
 
           chmod +x xcompile.sh
           ./xcompile.sh \
