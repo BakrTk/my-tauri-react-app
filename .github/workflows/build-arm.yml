@@ -22,7 +22,7 @@ jobs:
           git clone https://github.com/Shiritai/xc-tauri-rasp.git
           cd xc-tauri-rasp
 
-          # ✅ تعديل Dockerfile لإضافة pkg-config داخل الحاوية
+          # ✅ إصلاح Dockerfile لإضافة pkg-config
           sed -i '/RUN apt-get update/i RUN apt-get update && apt-get install -y pkg-config' Dockerfile
 
           chmod +x xcompile.sh
@@ -31,7 +31,8 @@ jobs:
             -n my-tauri-app \
             -p $GITHUB_WORKSPACE \
             -a armhf \
-            -t $GITHUB_WORKSPACE/output
+            -t $GITHUB_WORKSPACE/output \
+            --before "npm install"
 
       - name: 📂 List contents of output folder
         run: ls -lh output || echo "output folder is empty"
